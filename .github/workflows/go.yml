@@ -27,8 +27,5 @@ jobs:
     - name: Test
       run: find . -name "*.go" | xargs -I {} go run {}
 
-    - name: Vet
-      run: go vet -v .
-
     - name: Format
       run: test -z "$(gofmt -d .)"
