@@ -33,8 +33,7 @@ func main() {
 	}
 	scatter.Shape = draw.CircleGlyph{}
 
-	heat := Heat{Points: points}
-	heatmap := plotter.NewHeatMap(heat, moreland.SmoothBlueRed().Palette(100))
+	heatmap := plotter.NewHeatMap(Heat(points), moreland.SmoothBlueRed().Palette(100))
 
 	Func := func(x []float64) float64 {
 		if len(x) != 2 {
@@ -107,12 +106,10 @@ func main() {
 			panic(err)
 		}
 
-		aim, err := plotter.NewScatter(plotter.XYs{
-			{
-				X: result.X[0],
-				Y: result.X[1],
-			},
-		})
+		aim, err := plotter.NewScatter(plotter.XYs{{
+			X: result.X[0],
+			Y: result.X[1],
+		}})
 		if err != nil {
 			panic(err)
 		}
@@ -134,16 +131,14 @@ func main() {
 	}
 }
 
-type Heat struct {
-	Points plotter.XYs
-}
+type Heat plotter.XYs
 
 func (h Heat) Dims() (c, r int) { return 100, 100 }
 func (h Heat) X(c int) float64  { return float64(c) }
 func (h Heat) Y(r int) float64  { return float64(r) }
 func (h Heat) Z(c, r int) float64 {
 	var sum float64
-	for _, p := range h.Points {
+	for _, p := range h {
 		sum += math.Sqrt(math.Pow(p.X-h.X(c), 2) + math.Pow(p.Y-h.Y(r), 2))
 	}
 	return -sum
